@@ -1,123 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Movie Details - MovieFlix</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              gray: {
+                700: '#374151',
+                800: '#1F2937',
+                900: '#111827',
+              }
+            }
+          }
+        }
+      }
+    </script>
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css" />
     <!-- Iframely -->
     <script async src="//cdn.iframe.ly/embed.js" charset="utf-8"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Header with Navigation -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800/50">
-        <div class="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
-            <a href="../" class="text-xl sm:text-2xl font-bold hover:text-red-500 transition-colors">MovieFlix</a>
-            
-            <!-- Desktop Navigation -->
-            <nav class="hidden lg:block">
-                <ul class="flex items-center space-x-8">
-                    <li><a href="../" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Home</a></li>
-                    <li><a href="../#trending" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Trending</a></li>
-                    <li><a href="../#popular" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Popular</a></li>
-                    <li><a href="../#recently-added" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Recently Added</a></li>
-                </ul>
-            </nav>
-            
-            <!-- Mobile Menu Button -->
-            <button id="hamburger" class="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300 lg:hidden" aria-label="Toggle Navigation">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-        </div>
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800/50"
+    >
+      <div
+        class="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between"
+      >
+        <a
+          href="../"
+          class="text-xl sm:text-2xl font-bold hover:text-red-500 transition-colors"
+          >MovieFlix</a
+        >
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden lg:block">
+          <ul class="flex items-center space-x-8">
+            <li>
+              <a
+                href="../"
+                class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="../#trending"
+                class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300"
+                >Trending</a
+              >
+            </li>
+            <li>
+              <a
+                href="../#popular"
+                class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300"
+                >Popular</a
+              >
+            </li>
+            <li>
+              <a
+                href="../#recently-added"
+                class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300"
+                >Recently Added</a
+              >
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="hamburger"
+          class="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300 lg:hidden"
+          aria-label="Toggle Navigation"
+        >
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
     </header>
 
     <!-- Mobile Sidebar -->
-    <aside id="sidebar" class="fixed top-0 right-0 w-72 h-full bg-gray-900/95 backdrop-blur-sm transform translate-x-full transition-all duration-300 ease-in-out z-50 lg:hidden shadow-xl">
-        <div class="flex flex-col h-full">
-            <div class="flex items-center justify-between p-4 border-b border-gray-800">
-                <h2 class="text-xl font-bold">Menu</h2>
-                <button id="close-sidebar" class="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <nav class="flex-1 p-4">
-                <ul class="space-y-2">
-                    <li><a href="../" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Home</a></li>
-                    <li><a href="../#trending" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Trending</a></li>
-                    <li><a href="../#popular" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Popular</a></li>
-                    <li><a href="../#recently-added" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Recently Added</a></li>
-                </ul>
-            </nav>
+    <aside
+      id="sidebar"
+      class="fixed top-0 right-0 w-72 h-full bg-gray-900/95 backdrop-blur-sm transform translate-x-full transition-all duration-300 ease-in-out z-50 lg:hidden shadow-xl"
+    >
+      <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between p-4 border-b border-gray-800">
+          <h2 class="text-xl font-bold">Menu</h2>
+          <button
+            id="close-sidebar"
+            class="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
         </div>
+        <nav class="flex-1 p-4">
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="../"
+                class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="../#trending"
+                class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300"
+                >Trending</a
+              >
+            </li>
+            <li>
+              <a
+                href="../#popular"
+                class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300"
+                >Popular</a
+              >
+            </li>
+            <li>
+              <a
+                href="../#recently-added"
+                class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300"
+                >Recently Added</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
     </aside>
 
     <!-- Main Content -->
     <main class="min-h-screen pt-16 lg:pt-20">
-        <!-- Movie Details -->
-        <div class="relative">
-            <!-- Backdrop Image -->
-            <div id="movie-backdrop" class="absolute inset-0 h-[45vh] sm:h-[55vh] lg:h-[70vh] bg-cover bg-center bg-no-repeat"></div>
-            <div class="absolute inset-0 h-[45vh] sm:h-[55vh] lg:h-[70vh] bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"></div>
-            <div class="absolute inset-0 h-[45vh] sm:h-[55vh] lg:h-[70vh] bg-gradient-to-r from-gray-900/90 to-transparent"></div>
+      <!-- Movie Details -->
+      <div class="relative">
+        <!-- Backdrop Image -->
+        <div
+          id="movie-backdrop"
+          class="absolute inset-0 h-[45vh] sm:h-[55vh] lg:h-[70vh] bg-cover bg-center bg-no-repeat"
+        ></div>
+        <div
+          class="absolute inset-0 h-[45vh] sm:h-[55vh] lg:h-[70vh] bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"
+        ></div>
+        <div
+          class="absolute inset-0 h-[45vh] sm:h-[55vh] lg:h-[70vh] bg-gradient-to-r from-gray-900/90 to-transparent"
+        ></div>
 
-            <!-- Content -->
-            <div class="relative container mx-auto px-4 pt-[30vh] sm:pt-[40vh] lg:pt-[55vh]">
-                <div class="bg-gray-900/95 backdrop-blur-sm rounded-t-2xl sm:rounded-t-3xl -mt-8 shadow-2xl border border-gray-800/50">
-                    <div class="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
-                        <!-- Title and Meta -->
-                        <div>
-                            <h1 id="movie-title" class="text-2xl sm:text-3xl lg:text-5xl font-bold mb-3 sm:mb-4"></h1>
-                            <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-sm sm:text-base text-gray-300">
-                                <div id="movie-year" class="font-medium"></div>
-                                <div id="movie-runtime" class="font-medium"></div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400 mr-1.5"></i>
-                                    <span id="movie-rating" class="font-medium"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Overview -->
-                        <div>
-                            <p id="movie-overview" class="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-300"></p>
-                        </div>
-
-                        <!-- Genres -->
-                        <div>
-                            <h3 class="text-lg sm:text-xl font-semibold mb-3">Genres</h3>
-                            <div id="movie-genres" class="flex flex-wrap gap-2"></div>
-                        </div>
-
-                        <!-- Cast -->
-                        <div>
-                            <h3 class="text-lg sm:text-xl font-semibold mb-3">Cast</h3>
-                            <div class="relative">
-                                <div id="movie-cast" class="flex overflow-x-auto space-x-3 sm:space-x-4 pb-4 scrollbar-hide">
-                                    <!-- Cast members will be inserted here -->
-                                </div>
-                                <div class="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-gray-900 pointer-events-none"></div>
-                            </div>
-                        </div>
-
-                        <!-- Trailer -->
-                        <div>
-                            <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Trailer</h3>
-                            <div id="movie-trailer" class="aspect-video rounded-lg overflow-hidden bg-gray-800/50 shadow-lg"></div>
-                        </div>
-                    </div>
+        <!-- Content -->
+        <div
+          class="relative container mx-auto px-4 pt-[30vh] sm:pt-[40vh] lg:pt-[55vh]"
+        >
+          <div
+            class="bg-gray-900/95 backdrop-blur-sm rounded-t-2xl sm:rounded-t-3xl -mt-8 shadow-2xl border border-gray-800/50"
+          >
+            <div class="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+              <!-- Title and Meta -->
+              <div>
+                <h1
+                  id="movie-title"
+                  class="text-2xl sm:text-3xl lg:text-5xl font-bold mb-3 sm:mb-4"
+                ></h1>
+                <div
+                  class="flex flex-wrap items-center gap-3 sm:gap-4 text-sm sm:text-base text-gray-300"
+                >
+                  <div id="movie-year" class="font-medium"></div>
+                  <div id="movie-runtime" class="font-medium"></div>
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400 mr-1.5"></i>
+                    <span id="movie-rating" class="font-medium"></span>
+                  </div>
                 </div>
+              </div>
+
+              <!-- Overview -->
+              <div>
+                <p
+                  id="movie-overview"
+                  class="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-300"
+                ></p>
+              </div>
+
+              <!-- Genres -->
+              <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-3">Genres</h3>
+                <div id="movie-genres" class="flex flex-wrap gap-2"></div>
+              </div>
+
+              <!-- Cast -->
+              <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-3">Cast</h3>
+                <div class="relative">
+                  <div
+                    id="movie-cast"
+                    class="flex overflow-x-auto space-x-3 sm:space-x-4 pb-4 scrollbar-hide"
+                  >
+                    <!-- Cast members will be inserted here -->
+                  </div>
+                  <div
+                    class="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-gray-900 pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Trailer -->
+              <div>
+                <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+                  Trailer
+                </h3>
+                <div
+                  id="movie-trailer"
+                  class="aspect-video rounded-lg overflow-hidden bg-gray-800/50 shadow-lg"
+                ></div>
+              </div>
+
+              <!-- Shareable Link Section -->
+              <section id="share-section" class="bg-gray-800/80 backdrop-blur-sm p-6 sm:p-8 lg:p-10 rounded-2xl mt-8 shadow-xl border border-gray-700/50">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-8">
+                  <h3 class="text-lg sm:text-xl font-semibold flex items-center">
+                    <i class="fas fa-share-alt text-red-500 mr-3"></i>
+                    <span>Share this Video</span>
+                  </h3>
+                  <div class="flex items-center space-x-3">
+                    <button class="p-2 hover:bg-gray-700 rounded-lg transition-colors" title="Share on Facebook">
+                      <i class="fab fa-facebook text-lg text-blue-500"></i>
+                    </button>
+                    <button class="p-2 hover:bg-gray-700 rounded-lg transition-colors" title="Share on Twitter">
+                      <i class="fab fa-twitter text-lg text-sky-500"></i>
+                    </button>
+                    <button class="p-2 hover:bg-gray-700 rounded-lg transition-colors" title="Share on WhatsApp">
+                      <i class="fab fa-whatsapp text-lg text-green-500"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="space-y-8">
+                  <!-- Content URL -->
+                  <div class="space-y-3">
+                    <label for="share-content-url" class="block text-sm font-medium text-gray-300">
+                      Direct Link
+                    </label>
+                    <div class="relative">
+                      <input
+                        type="text"
+                        id="share-content-url"
+                        readonly
+                        class="w-full bg-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 px-4 py-2.5 text-sm border border-gray-600/50 rounded-lg overflow-hidden text-ellipsis pr-10"
+                      />
+                      <button
+                        id="copy-content-btn"
+                        title="Copy Direct Link"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      >
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Iframe Embed Code -->
+                  <div class="space-y-3">
+                    <label for="share-iframe-code" class="block text-sm font-medium text-gray-300">
+                      Embed Code
+                    </label>
+                    <div class="relative">
+                      <textarea
+                        id="share-iframe-code"
+                        rows="1"
+                        readonly
+                        class="w-full bg-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 px-4 py-2.5 text-sm border border-gray-600/50 rounded-lg resize-none overflow-hidden text-ellipsis pr-10"
+                      ></textarea>
+                      <button
+                        id="copy-iframe-btn"
+                        title="Copy Embed Code"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      >
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </section>
             </div>
+          </div>
         </div>
+      </div>
     </main>
 
     <!-- Error Message -->
-    <div id="error-message" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300">
-        Failed to load movie details. Please try again later.
+    <div
+      id="error-message"
+      class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300"
+    >
+      Failed to load movie details. Please try again later.
     </div>
 
     <!-- Scripts -->

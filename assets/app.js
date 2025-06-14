@@ -26,10 +26,10 @@ window.movieUtils = {
 
         const toggleSidebar = (show) => {
             if (show) {
-                sidebar.classList.add('active');
+                sidebar.classList.remove('translate-x-full');
                 document.body.style.overflow = 'hidden';
             } else {
-                sidebar.classList.remove('active');
+                sidebar.classList.add('translate-x-full');
                 document.body.style.overflow = '';
             }
         };
