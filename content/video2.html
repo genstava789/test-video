@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details - MovieFlix</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Iframely -->
+    <script async src="//cdn.iframe.ly/embed.js" charset="utf-8"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Header with Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold">MovieFlix</h1>
+            <button id="hamburger" class="text-2xl" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed top-0 right-0 w-64 h-full bg-gray-800/95 backdrop-blur-sm transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6">
+            <button id="close-sidebar" class="absolute top-4 right-4 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <nav class="mt-8">
+                <ul class="space-y-4">
+                    <li><a href="../" class="block py-2 hover:text-red-500 transition-colors">Home</a></li>
+                    <li><a href="../#recently-added" class="block py-2 hover:text-red-500 transition-colors">Recently Added</a></li>
+                    <li><a href="../#trending" class="block py-2 hover:text-red-500 transition-colors">Trending</a></li>
+                    <li><a href="../#popular" class="block py-2 hover:text-red-500 transition-colors">Popular</a></li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pt-20">
+        <!-- Back Navigation -->
+        <a href="../" class="inline-flex items-center text-red-500 hover:text-red-400 mb-8">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Home
+        </a>
+
+        <!-- Movie Details -->
+        <div class="relative">
+            <!-- Backdrop Image -->
+            <div id="movie-backdrop" class="absolute inset-0 h-[50vh] bg-cover bg-center -z-10"></div>
+            <div class="absolute inset-0 h-[50vh] bg-gradient-to-t from-gray-900 via-gray-900/50 -z-10"></div>
+
+            <!-- Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Movie Poster -->
+                <div class="md:col-span-1">
+                    <div id="movie-poster" class="rounded-lg overflow-hidden shadow-2xl"></div>
+                </div>
+
+                <!-- Movie Information -->
+                <div class="md:col-span-2">
+                    <h2 id="movie-title" class="text-4xl font-bold mb-4"></h2>
+                    
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div id="movie-year" class="text-gray-400"></div>
+                        <div id="movie-runtime" class="text-gray-400"></div>
+                        <div class="flex items-center">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span id="movie-rating"></span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <p id="movie-overview" class="text-lg leading-relaxed"></p>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Genres</h3>
+                            <div id="movie-genres" class="flex flex-wrap gap-2"></div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Cast</h3>
+                            <div id="movie-cast" class="flex overflow-x-auto space-x-4 pb-4"></div>
+                        </div>
+
+                        <!-- Trailer Section -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Trailer</h3>
+                            <div id="movie-trailer" class="aspect-video rounded-lg overflow-hidden bg-gray-800"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Error Message -->
+    <div id="error-message" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300">
+        Failed to load movie details. Please try again later.
+    </div>
+
+    <!-- Config -->
+    <script src="../config.js"></script>
+    <!-- Movie Detail JS -->
+    <script>
+        // TMDB API Configuration
+        const API_KEY = '829a43a98259bc44cae297489c7e3bba';
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
+        const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/500x750?text=No+Image+Available';
+
+        // Get movie ID from config
+        const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+        const contentEntry = contentConfig.recentlyAdded.find(entry => entry.id === currentPage);
+        const movieId = contentEntry ? contentEntry.tmdbId : null;
+
+        // DOM Elements
+        const movieBackdrop = document.getElementById('movie-backdrop');
+        const moviePoster = document.getElementById('movie-poster');
+        const movieTitle = document.getElementById('movie-title');
+        const movieYear = document.getElementById('movie-year');
+        const movieRuntime = document.getElementById('movie-runtime');
+        const movieRating = document.getElementById('movie-rating');
+        const movieOverview = document.getElementById('movie-overview');
+        const movieGenres = document.getElementById('movie-genres');
+        const movieCast = document.getElementById('movie-cast');
+        const movieTrailer = document.getElementById('movie-trailer');
+        const errorMessage = document.getElementById('error-message');
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigation();
+            if (movieId) {
+                loadMovieDetails();
+            } else {
+                showError('Movie not found in configuration.');
+            }
+        });
+
+        // Navigation Functions
+        function initNavigation() {
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+            const closeSidebar = document.getElementById('close-sidebar');
+
+            hamburger.addEventListener('click', () => {
+                sidebar.classList.add('active');
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        }
+
+        // Load movie details
+        async function loadMovieDetails() {
+            try {
+                const [movieDetails, credits, videos] = await Promise.all([
+                    fetchMovieDetails(),
+                    fetchMovieCredits(),
+                    fetchMovieVideos()
+                ]);
+
+                renderMovieDetails(movieDetails);
+                renderCast(credits.cast);
+                renderTrailer(videos.results);
+
+            } catch (error) {
+                console.error('Error loading movie details:', error);
+                showError('Failed to load movie details. Please try again later.');
+            }
+        }
+
+        // Fetch movie details from TMDB API
+        async function fetchMovieDetails() {
+            const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        }
+
+        // Fetch movie credits from TMDB API
+        async function fetchMovieCredits() {
+            const response = await fetch(`${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        }
+
+        // Fetch movie videos from TMDB API
+        async function fetchMovieVideos() {
+            const response = await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        }
+
+        // Render movie details
+        function renderMovieDetails(movie) {
+            document.title = `${movie.title} - MovieFlix`;
+
+            // Set backdrop
+            if (movie.backdrop_path) {
+                movieBackdrop.style.backgroundImage = `url(${IMAGE_BASE_URL}/original${movie.backdrop_path})`;
+            }
+
+            // Set poster
+            if (movie.poster_path) {
+                moviePoster.innerHTML = `
+                    <img src="${IMAGE_BASE_URL}/w500${movie.poster_path}" 
+                         alt="${movie.title}" 
+                         class="w-full h-auto">
+                `;
+            }
+
+            // Set text content
+            movieTitle.textContent = movie.title;
+            movieYear.textContent = new Date(movie.release_date).getFullYear();
+            movieRuntime.textContent = `${movie.runtime} min`;
+            movieRating.textContent = movie.vote_average.toFixed(1);
+            movieOverview.textContent = movie.overview;
+
+            // Set genres
+            movieGenres.innerHTML = movie.genres
+                .map(genre => `
+                    <span class="px-3 py-1 bg-gray-800 rounded-full text-sm">
+                        ${genre.name}
+                    </span>
+                `)
+                .join('');
+        }
+
+        // Render cast members
+        function renderCast(cast) {
+            const mainCast = cast.slice(0, 6);
+            movieCast.innerHTML = mainCast
+                .map(person => `
+                    <div class="flex-shrink-0 w-24">
+                        <div class="aspect-[2/3] rounded overflow-hidden mb-2">
+                            ${person.profile_path 
+                                ? `<img src="${IMAGE_BASE_URL}/w185${person.profile_path}" 
+                                       alt="${person.name}"
+                                       class="w-full h-full object-cover">`
+                                : `<div class="w-full h-full bg-gray-800 flex items-center justify-center">
+                                       <i class="fas fa-user text-gray-600"></i>
+                                   </div>`
+                            }
+                        </div>
+                        <p class="text-sm font-medium truncate">${person.name}</p>
+                        <p class="text-xs text-gray-400 truncate">${person.character}</p>
+                    </div>
+                `)
+                .join('');
+        }
+
+        // Render movie trailer
+        function renderTrailer(videos) {
+            const trailer = videos.find(video => video.type === 'Trailer') || videos[0];
+            if (trailer) {
+                movieTrailer.innerHTML = `
+                    <div class="iframely-embed">
+                        <div class="iframely-responsive">
+                            <a href="https://www.youtube.com/watch?v=${trailer.key}"
+                               data-iframely-url></a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
