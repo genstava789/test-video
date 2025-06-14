@@ -88,24 +88,23 @@ async function loadMovieDetails() {
 }
 
 function initShareableLinks() {
-  const contentUrlInput = document.getElementById('share-content-url');
-  const iframeCodeTextarea = document.getElementById('share-iframe-code');
+  const contentUrlCode = document.getElementById('share-content-url');
+  const iframeCodeElement = document.getElementById('share-iframe-code');
   const copyContentBtn = document.getElementById('copy-content-btn');
   const copyIframeBtn = document.getElementById('copy-iframe-btn');
-  const copyFeedback = document.getElementById('copy-feedback');
 
-  if (!contentUrlInput || !iframeCodeTextarea || !copyContentBtn || !copyIframeBtn) {
+  if (!contentUrlCode || !iframeCodeElement || !copyContentBtn || !copyIframeBtn) {
     console.error('Shareable link elements not found on the page.');
     return;
   }
 
   // Set the Content URL to the current page URL
   const contentUrl = window.location.href;
-  contentUrlInput.value = contentUrl;
+  contentUrlCode.textContent = contentUrl;
 
   // Create an embeddable iframe snippet
   const iframeCode = `<iframe src="${contentUrl}" width="560" height="315" frameborder="0" allowfullscreen></iframe>`;
-  iframeCodeTextarea.value = iframeCode;
+  iframeCodeElement.textContent = iframeCode;
 
   // Helper function to copy text and show feedback
   const copyText = async (textToCopy, button) => {
@@ -139,18 +138,12 @@ function initShareableLinks() {
 
   // Handle copy content button click
   function handleCopyContent(event) {
-    const contentUrlInput = document.getElementById('share-content-url');
-    if (contentUrlInput) {
-      copyText(contentUrlInput.value, event.currentTarget);
-    }
+    copyText(contentUrl, event.currentTarget);
   }
 
   // Handle copy iframe button click
   function handleCopyIframe(event) {
-    const iframeCodeTextarea = document.getElementById('share-iframe-code');
-    if (iframeCodeTextarea) {
-      copyText(iframeCodeTextarea.value, event.currentTarget);
-    }
+    copyText(iframeCode, event.currentTarget);
   }
 
   // Initialize social share buttons

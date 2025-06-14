@@ -249,17 +249,14 @@
                     <label for="share-content-url" class="block text-sm font-medium text-gray-300">
                       Direct Link
                     </label>
-                    <div class="relative">
-                      <input
-                        type="text"
-                        id="share-content-url"
-                        readonly
-                        class="w-full bg-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 px-4 py-2.5 text-sm border border-gray-600/50 rounded-lg overflow-hidden text-ellipsis pr-10"
-                      />
+                    <div class="group relative bg-gray-700/50 rounded-lg border border-gray-600/50 hover:border-gray-500/50 transition-colors">
+                      <div class="px-4 py-3 pr-12 overflow-x-auto text-sm scrollbar-hide">
+                        <code id="share-content-url" class="text-gray-300 whitespace-nowrap inline-block"></code>
+                      </div>
                       <button
                         id="copy-content-btn"
                         title="Copy Direct Link"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                        class="opacity-0 group-hover:opacity-100 absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-gray-600/50 text-gray-300 hover:text-white rounded transition-all"
                       >
                         <i class="fas fa-copy"></i>
                       </button>
@@ -271,17 +268,14 @@
                     <label for="share-iframe-code" class="block text-sm font-medium text-gray-300">
                       Embed Code
                     </label>
-                    <div class="relative">
-                      <textarea
-                        id="share-iframe-code"
-                        rows="1"
-                        readonly
-                        class="w-full bg-gray-700/50 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 px-4 py-2.5 text-sm border border-gray-600/50 rounded-lg resize-none overflow-hidden text-ellipsis pr-10"
-                      ></textarea>
+                    <div class="group relative bg-gray-700/50 rounded-lg border border-gray-600/50 hover:border-gray-500/50 transition-colors">
+                      <div class="px-4 py-3 pr-12 overflow-x-auto text-sm scrollbar-hide">
+                        <code id="share-iframe-code" class="text-gray-300 font-mono whitespace-nowrap inline-block"></code>
+                      </div>
                       <button
                         id="copy-iframe-btn"
                         title="Copy Embed Code"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                        class="opacity-0 group-hover:opacity-100 absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-gray-600/50 text-gray-300 hover:text-white rounded transition-all"
                       >
                         <i class="fas fa-copy"></i>
                       </button>
