@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo Valley - MovieFlix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-4">
+            <a href="../" class="inline-flex items-center text-red-500 hover:text-red-400">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Home
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 pt-20">
+        <!-- Video Player Section -->
+        <div class="mb-8 rounded-xl overflow-hidden shadow-2xl bg-gray-800">
+            <iframe 
+                id="video-frame" 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                class="w-full aspect-video"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <!-- Movie Information -->
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-start justify-between gap-8 flex-wrap">
+                <div class="flex-1 min-w-[280px]">
+                    <h1 class="text-4xl font-bold mb-4">Echo Valley</h1>
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="bg-red-600 px-3 py-1.5 rounded-md text-sm font-medium">Movie</span>
+                        <span class="text-gray-400">2024</span>
+                        <span class="text-gray-400">2h 15m</span>
+                        <span class="flex items-center gap-1 text-yellow-400">
+                            <i class="fas fa-star text-sm"></i>
+                            <span>8.5</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed mb-8 text-lg">
+                        Kate lives a secluded life—until her troubled daughter shows up, frightened and covered in someone else's blood. As Kate unravels the shocking truth, she learns just how far a mother will go to try to save her child.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <span class="text-gray-400 w-24 shrink-0">Director:</span>
+                            <span class="text-gray-100">Michael Pearce</span>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="text-gray-400 w-24 shrink-0">Cast:</span>
+                            <span class="text-gray-100">Sydney Sweeney, Julianne Moore, Domhnall Gleeson</span>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="text-gray-400 w-24 shrink-0">Genre:</span>
+                            <span class="text-gray-100">Thriller, Drama</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Share Section -->
+                <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl w-full sm:w-auto shadow-xl">
+                    <h3 class="text-lg font-semibold mb-6 flex items-center gap-2">
+                        <i class="fas fa-share-alt text-red-500"></i>
+                        Share Movie
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Video URL</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="video-url" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="bg-gray-700/50 rounded-lg px-3 py-2 w-full text-sm" readonly>
+                                <button onclick="copyToClipboard('video-url')" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg hover:shadow-red-600/25">
+                                    <i class="fas fa-copy"></i>
+                                    <span class="hidden sm:inline">Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Embed Code</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="embed-code" class="bg-gray-700/50 rounded-lg px-3 py-2 w-full text-sm" readonly>
+                                <button onclick="copyToClipboard('embed-code')" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg hover:shadow-red-600/25">
+                                    <i class="fas fa-copy"></i>
+                                    <span class="hidden sm:inline">Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Set embed code
+        const embedCode = '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+        document.getElementById('embed-code').value = embedCode;
+
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const button = element.nextElementSibling;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check text-green-400"></i><span class="hidden sm:inline">Copied!</span>';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

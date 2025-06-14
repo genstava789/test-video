@@ -13,12 +13,12 @@
     <!-- Iframely -->
     <script async src="//cdn.iframe.ly/embed.js" charset="utf-8"></script>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white min-h-screen">
     <!-- Header with Navigation -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <h1 class="text-2xl font-bold">MovieFlix</h1>
-            <button id="hamburger" class="text-2xl" aria-label="Toggle Navigation">
+            <a href="../" class="text-2xl font-bold hover:text-red-500 transition-colors">MovieFlix</a>
+            <button id="hamburger" class="text-2xl p-2 hover:text-red-500 transition-colors" aria-label="Toggle Navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -27,7 +27,7 @@
     <!-- Sidebar Navigation -->
     <aside id="sidebar" class="fixed top-0 right-0 w-64 h-full bg-gray-800/95 backdrop-blur-sm transform translate-x-full transition-transform duration-300 z-50">
         <div class="p-6">
-            <button id="close-sidebar" class="absolute top-4 right-4 text-2xl">
+            <button id="close-sidebar" class="absolute top-4 right-4 text-2xl p-2 hover:text-red-500 transition-colors">
                 <i class="fas fa-times"></i>
             </button>
             <nav class="mt-8">
@@ -42,56 +42,54 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 pt-20">
-        <!-- Back Navigation -->
-        <a href="../" class="inline-flex items-center text-red-500 hover:text-red-400 mb-8">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Back to Home
-        </a>
-
+    <main class="min-h-screen pt-16">
         <!-- Movie Details -->
         <div class="relative">
             <!-- Backdrop Image -->
-            <div id="movie-backdrop" class="absolute inset-0 h-[50vh] bg-cover bg-center -z-10"></div>
-            <div class="absolute inset-0 h-[50vh] bg-gradient-to-t from-gray-900 via-gray-900/50 -z-10"></div>
+            <div id="movie-backdrop" class="absolute inset-0 h-[50vh] md:h-[70vh] bg-cover bg-center"></div>
+            <div class="absolute inset-0 h-[50vh] md:h-[70vh] bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent"></div>
 
-            <!-- Content Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Movie Poster -->
-                <div class="md:col-span-1">
-                    <div id="movie-poster" class="rounded-lg overflow-hidden shadow-2xl"></div>
-                </div>
-
-                <!-- Movie Information -->
-                <div class="md:col-span-2">
-                    <h2 id="movie-title" class="text-4xl font-bold mb-4"></h2>
-                    
-                    <div class="flex items-center space-x-4 mb-6">
-                        <div id="movie-year" class="text-gray-400"></div>
-                        <div id="movie-runtime" class="text-gray-400"></div>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span id="movie-rating"></span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <p id="movie-overview" class="text-lg leading-relaxed"></p>
-                        
+            <!-- Content -->
+            <div class="relative container mx-auto px-4 pt-[35vh] md:pt-[50vh]">
+                <div class="bg-gray-900/95 backdrop-blur-sm rounded-t-3xl -mt-8 shadow-2xl">
+                    <div class="p-6 md:p-8 space-y-6 md:space-y-8">
+                        <!-- Title and Meta -->
                         <div>
-                            <h3 class="text-xl font-semibold mb-2">Genres</h3>
+                            <h1 id="movie-title" class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"></h1>
+                            <div class="flex flex-wrap items-center gap-4 text-sm md:text-base text-gray-300">
+                                <div id="movie-year"></div>
+                                <div id="movie-runtime"></div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                    <span id="movie-rating"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overview -->
+                        <div>
+                            <p id="movie-overview" class="text-base md:text-lg leading-relaxed text-gray-300"></p>
+                        </div>
+
+                        <!-- Genres -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3">Genres</h3>
                             <div id="movie-genres" class="flex flex-wrap gap-2"></div>
                         </div>
 
+                        <!-- Cast -->
                         <div>
-                            <h3 class="text-xl font-semibold mb-2">Cast</h3>
-                            <div id="movie-cast" class="flex overflow-x-auto space-x-4 pb-4"></div>
+                            <h3 class="text-xl font-semibold mb-3">Cast</h3>
+                            <div class="relative">
+                                <div id="movie-cast" class="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide"></div>
+                                <div class="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-gray-900 pointer-events-none"></div>
+                            </div>
                         </div>
 
-                        <!-- Trailer Section -->
+                        <!-- Trailer -->
                         <div>
                             <h3 class="text-xl font-semibold mb-4">Trailer</h3>
-                            <div id="movie-trailer" class="aspect-video rounded-lg overflow-hidden bg-gray-800"></div>
+                            <div id="movie-trailer" class="aspect-video rounded-lg overflow-hidden bg-gray-800 shadow-lg"></div>
                         </div>
                     </div>
                 </div>
@@ -104,186 +102,9 @@
         Failed to load movie details. Please try again later.
     </div>
 
-    <!-- Config -->
+    <!-- Scripts -->
     <script src="../config.js"></script>
-    <!-- Movie Detail JS -->
-    <script>
-        // TMDB API Configuration
-        const API_KEY = '829a43a98259bc44cae297489c7e3bba';
-        const BASE_URL = 'https://api.themoviedb.org/3';
-        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
-        const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/500x750?text=No+Image+Available';
-
-        // Get movie ID from config
-        const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
-        const contentEntry = contentConfig.recentlyAdded.find(entry => entry.id === currentPage);
-        const movieId = contentEntry ? contentEntry.tmdbId : null;
-
-        // DOM Elements
-        const movieBackdrop = document.getElementById('movie-backdrop');
-        const moviePoster = document.getElementById('movie-poster');
-        const movieTitle = document.getElementById('movie-title');
-        const movieYear = document.getElementById('movie-year');
-        const movieRuntime = document.getElementById('movie-runtime');
-        const movieRating = document.getElementById('movie-rating');
-        const movieOverview = document.getElementById('movie-overview');
-        const movieGenres = document.getElementById('movie-genres');
-        const movieCast = document.getElementById('movie-cast');
-        const movieTrailer = document.getElementById('movie-trailer');
-        const errorMessage = document.getElementById('error-message');
-
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            initNavigation();
-            if (movieId) {
-                loadMovieDetails();
-            } else {
-                showError('Movie not found in configuration.');
-            }
-        });
-
-        // Navigation Functions
-        function initNavigation() {
-            const hamburger = document.getElementById('hamburger');
-            const sidebar = document.getElementById('sidebar');
-            const closeSidebar = document.getElementById('close-sidebar');
-
-            hamburger.addEventListener('click', () => {
-                sidebar.classList.add('active');
-            });
-
-            closeSidebar.addEventListener('click', () => {
-                sidebar.classList.remove('active');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-                    sidebar.classList.remove('active');
-                }
-            });
-        }
-
-        // Load movie details
-        async function loadMovieDetails() {
-            try {
-                const [movieDetails, credits, videos] = await Promise.all([
-                    fetchMovieDetails(),
-                    fetchMovieCredits(),
-                    fetchMovieVideos()
-                ]);
-
-                renderMovieDetails(movieDetails);
-                renderCast(credits.cast);
-                renderTrailer(videos.results);
-
-            } catch (error) {
-                console.error('Error loading movie details:', error);
-                showError('Failed to load movie details. Please try again later.');
-            }
-        }
-
-        // Fetch movie details from TMDB API
-        async function fetchMovieDetails() {
-            const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        }
-
-        // Fetch movie credits from TMDB API
-        async function fetchMovieCredits() {
-            const response = await fetch(`${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`);
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        }
-
-        // Fetch movie videos from TMDB API
-        async function fetchMovieVideos() {
-            const response = await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`);
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        }
-
-        // Render movie details
-        function renderMovieDetails(movie) {
-            document.title = `${movie.title} - MovieFlix`;
-
-            // Set backdrop
-            if (movie.backdrop_path) {
-                movieBackdrop.style.backgroundImage = `url(${IMAGE_BASE_URL}/original${movie.backdrop_path})`;
-            }
-
-            // Set poster
-            if (movie.poster_path) {
-                moviePoster.innerHTML = `
-                    <img src="${IMAGE_BASE_URL}/w500${movie.poster_path}" 
-                         alt="${movie.title}" 
-                         class="w-full h-auto">
-                `;
-            }
-
-            // Set text content
-            movieTitle.textContent = movie.title;
-            movieYear.textContent = new Date(movie.release_date).getFullYear();
-            movieRuntime.textContent = `${movie.runtime} min`;
-            movieRating.textContent = movie.vote_average.toFixed(1);
-            movieOverview.textContent = movie.overview;
-
-            // Set genres
-            movieGenres.innerHTML = movie.genres
-                .map(genre => `
-                    <span class="px-3 py-1 bg-gray-800 rounded-full text-sm">
-                        ${genre.name}
-                    </span>
-                `)
-                .join('');
-        }
-
-        // Render cast members
-        function renderCast(cast) {
-            const mainCast = cast.slice(0, 6);
-            movieCast.innerHTML = mainCast
-                .map(person => `
-                    <div class="flex-shrink-0 w-24">
-                        <div class="aspect-[2/3] rounded overflow-hidden mb-2">
-                            ${person.profile_path 
-                                ? `<img src="${IMAGE_BASE_URL}/w185${person.profile_path}" 
-                                       alt="${person.name}"
-                                       class="w-full h-full object-cover">`
-                                : `<div class="w-full h-full bg-gray-800 flex items-center justify-center">
-                                       <i class="fas fa-user text-gray-600"></i>
-                                   </div>`
-                            }
-                        </div>
-                        <p class="text-sm font-medium truncate">${person.name}</p>
-                        <p class="text-xs text-gray-400 truncate">${person.character}</p>
-                    </div>
-                `)
-                .join('');
-        }
-
-        // Render movie trailer
-        function renderTrailer(videos) {
-            const trailer = videos.find(video => video.type === 'Trailer') || videos[0];
-            if (trailer) {
-                movieTrailer.innerHTML = `
-                    <div class="iframely-embed">
-                        <div class="iframely-responsive">
-                            <a href="https://www.youtube.com/watch?v=${trailer.key}"
-                               data-iframely-url></a>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // Show error message
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 5000);
-        }
-    </script>
+    <script src="../assets/app.js"></script>
+    <script src="video1-script.js" type="module"></script>
 </body>
 </html>

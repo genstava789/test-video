@@ -1,47 +1,73 @@
-// TMDB API Configuration
-const API_KEY = '829a43a98259bc44cae297489c7e3bba'; // Replace with your TMDB API key
-const BASE_URL = 'https://api.themoviedb.org/3';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
-const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/500x750?text=No+Image+Available';
+// TMDB API Configuration and Utilities
+window.movieUtils = {
+    API_KEY: '829a43a98259bc44cae297489c7e3bba',
+    BASE_URL: 'https://api.themoviedb.org/3',
+    IMAGE_BASE_URL: 'https://image.tmdb.org/t/p',
+    PLACEHOLDER_IMAGE: 'https://via.placeholder.com/500x750?text=No+Image+Available',
+    
+    showError: function(message) {
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        } else {
+            console.error(message);
+        }
+    },
+
+    initNavigation: function() {
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const closeSidebar = document.getElementById('close-sidebar');
+
+        if (hamburger && sidebar && closeSidebar) {
+            hamburger.addEventListener('click', () => {
+                sidebar.classList.add('active');
+            });
+
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        }
+    },
+
+    fetchMovieById: async function(movieId) {
+        try {
+            const response = await fetch(`${this.BASE_URL}/movie/${movieId}?api_key=${this.API_KEY}&language=en-US`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching movie:', error);
+            return null;
+        }
+    }
+};
 
 // Check if API key is configured
-if (API_KEY === 'YOUR_TMDB_API_KEY') {
-    showError('Please configure your TMDB API key in app.js');
+if (window.movieUtils.API_KEY === 'YOUR_TMDB_API_KEY') {
+    window.movieUtils.showError('Please configure your TMDB API key in app.js');
 }
-
-// DOM Elements
-const heroMovie = document.getElementById('hero-movie');
-const heroTitle = document.getElementById('hero-title');
-const heroOverview = document.getElementById('hero-overview');
-const errorMessage = document.getElementById('error-message');
-const hamburger = document.getElementById('hamburger');
-const sidebar = document.getElementById('sidebar');
-const closeSidebar = document.getElementById('close-sidebar');
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    initSwipers();
-    loadMovies();
+    const heroMovie = document.getElementById('hero-movie');
+    const heroTitle = document.getElementById('hero-title');
+    const heroOverview = document.getElementById('hero-overview');
+
+    if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+        initSwipers();
+        loadMovies();
+    }
 });
-
-// Navigation Functions
-function initNavigation() {
-    hamburger.addEventListener('click', () => {
-        sidebar.classList.add('active');
-    });
-
-    closeSidebar.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-    });
-
-    // Close sidebar when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-            sidebar.classList.remove('active');
-        }
-    });
-}
 
 // Initialize Swiper instances
 function initSwipers() {
@@ -91,19 +117,23 @@ async function loadMovies() {
 
         // Set hero section with first recently added movie
         if (contentConfig.recentlyAdded.length > 0) {
-            const heroMovie = await fetchMovieById(contentConfig.recentlyAdded[0].tmdbId);
+            const heroMovie = await window.movieUtils.fetchMovieById(contentConfig.recentlyAdded[0].tmdbId);
             if (heroMovie) {
                 setHeroMovie(heroMovie);
             }
         }
 
         // Render movie sections
-        renderMovies(trendingMovies, '.trending-swiper .swiper-wrapper');
-        renderMovies(popularMovies, '.popular-swiper .swiper-wrapper');
+        if (trendingMovies && trendingMovies.length > 0) {
+            renderMovies(trendingMovies.filter(movie => movie !== null), '.trending-swiper .swiper-wrapper');
+        }
+        if (popularMovies && popularMovies.length > 0) {
+            renderMovies(popularMovies.filter(movie => movie !== null), '.popular-swiper .swiper-wrapper');
+        }
 
     } catch (error) {
         console.error('Error loading movies:', error);
-        showError('Failed to load movies. Please try again later.');
+        window.movieUtils.showError('Failed to load movies. Please try again later.');
     }
 }
 
@@ -116,7 +146,7 @@ async function loadRecentlyAddedContent() {
         // Limit to 10 items
         const recentContent = contentConfig.recentlyAdded.slice(0, 10);
         const moviePromises = recentContent.map(async (content) => {
-            const movie = await fetchMovieById(content.tmdbId);
+            const movie = await window.movieUtils.fetchMovieById(content.tmdbId);
             if (movie) {
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
@@ -134,7 +164,7 @@ async function loadRecentlyAddedContent() {
         await Promise.all(moviePromises);
     } catch (error) {
         console.error('Error loading recently added content:', error);
-        showError('Failed to load recently added content.');
+        window.movieUtils.showError('Failed to load recently added content.');
     }
 }
 
@@ -145,40 +175,26 @@ async function loadCategoryContent(category) {
         
         // Limit to 10 movies per category
         const movieIds = contentConfig.categories[category].slice(0, 10);
-        const moviePromises = movieIds.map(id => fetchMovieById(id));
-        return await Promise.all(moviePromises);
+        const moviePromises = movieIds.map(id => window.movieUtils.fetchMovieById(id));
+        const movies = await Promise.all(moviePromises);
+        return movies.filter(movie => movie !== null);
     } catch (error) {
         console.error(`Error loading ${category} content:`, error);
         return [];
     }
 }
 
-// Fetch movie by ID from TMDB API
-async function fetchMovieById(movieId) {
-    try {
-        const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
-        if (!response.ok) throw new Error('Network response was not ok');
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching movie:', error);
-        return null;
-    }
-}
-
-// Fetch movies from TMDB API
-async function fetchMovies(endpoint) {
-    const response = await fetch(`${BASE_URL}${endpoint}?api_key=${API_KEY}&language=en-US`);
-    if (!response.ok) throw new Error('Network response was not ok');
-    const data = await response.json();
-    return data.results;
-}
-
 // Set hero section content
 function setHeroMovie(movie) {
-    const backdropPath = movie.backdrop_path;
-    heroMovie.style.backgroundImage = `url(${IMAGE_BASE_URL}/original${backdropPath})`;
-    heroTitle.textContent = movie.title;
-    heroOverview.textContent = movie.overview;
+    const heroMovie = document.getElementById('hero-movie');
+    const heroTitle = document.getElementById('hero-title');
+    const heroOverview = document.getElementById('hero-overview');
+
+    if (heroMovie && heroTitle && heroOverview && movie.backdrop_path) {
+        heroMovie.style.backgroundImage = `url(${window.movieUtils.IMAGE_BASE_URL}/original${movie.backdrop_path})`;
+        heroTitle.textContent = movie.title;
+        heroOverview.textContent = movie.overview;
+    }
 }
 
 // Render movies in swiper container
@@ -199,10 +215,11 @@ function renderMovies(movies, containerSelector) {
 // Create movie card element
 function createMovieCard(movie) {
     const card = document.createElement('div');
-    card.className = 'movie-card group relative w-[160px] sm:w-[180px] lg:w-[200px] h-[240px] sm:h-[270px] lg:h-[300px] rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:ring-2 hover:ring-red-500 hover:shadow-xl hover:shadow-red-500/20 flex-shrink-0';
+    card.className = 'movie-card group relative w-[160px] sm:w-[180px] lg:w-[200px] h-[240px] sm:h-[270px] lg:h-[300px] rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-black/30 flex-shrink-0';
     
-    const posterPath = movie.poster_path;
-    const posterUrl = posterPath ? `${IMAGE_BASE_URL}/w500${posterPath}` : PLACEHOLDER_IMAGE;
+    const posterUrl = movie.poster_path 
+        ? `${window.movieUtils.IMAGE_BASE_URL}/w500${movie.poster_path}` 
+        : window.movieUtils.PLACEHOLDER_IMAGE;
 
     card.innerHTML = `
         <div class="absolute inset-0">
