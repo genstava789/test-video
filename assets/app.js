@@ -48,31 +48,28 @@ function initSwipers() {
     const swiperOptions = {
         slidesPerView: 'auto',
         spaceBetween: 16,
-        freeMode: true,
-        loop: false,
-        mousewheel: {
-            forceToAxis: true,
-        },
-        keyboard: {
+        freeMode: {
             enabled: true,
-            onlyInViewport: true,
+            momentum: true,
+            momentumRatio: 0.8
         },
+        loop: false,
+        mousewheel: false,
+        keyboard: false,
         breakpoints: {
             320: {
-                slidesPerView: 'auto',
                 spaceBetween: 12
             },
             640: {
-                slidesPerView: 'auto',
                 spaceBetween: 16
             },
             1024: {
-                slidesPerView: 'auto',
                 spaceBetween: 20
             }
         },
         grabCursor: true,
-        touchEventsTarget: 'container'
+        touchEventsTarget: 'container',
+        cssMode: true
     };
 
     new Swiper('.recently-added-swiper', swiperOptions);
@@ -116,7 +113,9 @@ async function loadRecentlyAddedContent() {
         const recentlyAddedContainer = document.querySelector('.recently-added-swiper .swiper-wrapper');
         if (!recentlyAddedContainer) return;
 
-        const moviePromises = contentConfig.recentlyAdded.map(async (content) => {
+        // Limit to 10 items
+        const recentContent = contentConfig.recentlyAdded.slice(0, 10);
+        const moviePromises = recentContent.map(async (content) => {
             const movie = await fetchMovieById(content.tmdbId);
             if (movie) {
                 const slide = document.createElement('div');
@@ -144,7 +143,9 @@ async function loadCategoryContent(category) {
     try {
         if (!contentConfig.categories[category]) return [];
         
-        const moviePromises = contentConfig.categories[category].map(id => fetchMovieById(id));
+        // Limit to 10 movies per category
+        const movieIds = contentConfig.categories[category].slice(0, 10);
+        const moviePromises = movieIds.map(id => fetchMovieById(id));
         return await Promise.all(moviePromises);
     } catch (error) {
         console.error(`Error loading ${category} content:`, error);
@@ -198,7 +199,7 @@ function renderMovies(movies, containerSelector) {
 // Create movie card element
 function createMovieCard(movie) {
     const card = document.createElement('div');
-    card.className = 'movie-card group relative h-[240px] sm:h-[270px] lg:h-[300px] rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:ring-2 hover:ring-red-500 hover:shadow-xl hover:shadow-red-500/20';
+    card.className = 'movie-card group relative w-[160px] sm:w-[180px] lg:w-[200px] h-[240px] sm:h-[270px] lg:h-[300px] rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:ring-2 hover:ring-red-500 hover:shadow-xl hover:shadow-red-500/20 flex-shrink-0';
     
     const posterPath = movie.poster_path;
     const posterUrl = posterPath ? `${IMAGE_BASE_URL}/w500${posterPath}` : PLACEHOLDER_IMAGE;
@@ -228,15 +229,23 @@ function createMovieCard(movie) {
         // Find the content entry for this movie
         const contentEntry = contentConfig.recentlyAdded.find(entry => entry.tmdbId === movie.id.toString());
         if (contentEntry) {
-            window.location.href = `content/${contentEntry.id}.html`;
+            // Try to fetch the HTML file first
+            fetch(`content/${contentEntry.id}.html`)
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = `content/${contentEntry.id}.html`;
+                    } else {
+                        // If HTML not found, redirect to TMDB
+                        window.location.href = `https://www.themoviedb.org/movie/${movie.id}`;
+                    }
+                })
+                .catch(() => {
+                    // If fetch fails, redirect to TMDB
+                    window.location.href = `https://www.themoviedb.org/movie/${movie.id}`;
+                });
         } else {
-            // If not in recently added, check categories
-            const isInTrending = contentConfig.categories.trending.includes(movie.id.toString());
-            const isInPopular = contentConfig.categories.popular.includes(movie.id.toString());
-            
-            // Default to video1.html if not found in config
-            const videoId = isInTrending || isInPopular ? 'video1' : 'video1';
-            window.location.href = `content/${videoId}.html?id=${movie.id}`;
+            // If not in config, redirect to TMDB
+            window.location.href = `https://www.themoviedb.org/movie/${movie.id}`;
         }
     });
 
