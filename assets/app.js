@@ -22,22 +22,66 @@ window.movieUtils = {
         const hamburger = document.getElementById('hamburger');
         const sidebar = document.getElementById('sidebar');
         const closeSidebar = document.getElementById('close-sidebar');
+        const sidebarLinks = document.querySelectorAll('#sidebar a');
+
+        const toggleSidebar = (show) => {
+            if (show) {
+                sidebar.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                sidebar.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
 
         if (hamburger && sidebar && closeSidebar) {
+            // Toggle sidebar on hamburger click
             hamburger.addEventListener('click', () => {
-                sidebar.classList.add('active');
+                toggleSidebar(true);
             });
 
+            // Close sidebar on close button click
             closeSidebar.addEventListener('click', () => {
-                sidebar.classList.remove('active');
+                toggleSidebar(false);
             });
 
+            // Close sidebar when clicking outside
             document.addEventListener('click', (e) => {
                 if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-                    sidebar.classList.remove('active');
+                    toggleSidebar(false);
                 }
             });
+
+            // Close sidebar on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    toggleSidebar(false);
+                }
+            });
+
+            // Close sidebar after clicking a link
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    toggleSidebar(false);
+                });
+            });
         }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').slice(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     },
 
     fetchMovieById: async function(movieId) {
@@ -59,10 +103,10 @@ if (window.movieUtils.API_KEY === 'YOUR_TMDB_API_KEY') {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const heroMovie = document.getElementById('hero-movie');
-    const heroTitle = document.getElementById('hero-title');
-    const heroOverview = document.getElementById('hero-overview');
+    // Initialize navigation for all pages
+    window.movieUtils.initNavigation();
 
+    // Initialize homepage specific features
     if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
         initSwipers();
         loadMovies();
@@ -215,7 +259,7 @@ function renderMovies(movies, containerSelector) {
 // Create movie card element
 function createMovieCard(movie) {
     const card = document.createElement('div');
-    card.className = 'movie-card group relative w-[160px] sm:w-[180px] lg:w-[200px] h-[240px] sm:h-[270px] lg:h-[300px] rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-black/30 flex-shrink-0';
+    card.className = 'movie-card group relative w-[140px] sm:w-[160px] lg:w-[200px] h-[210px] sm:h-[240px] lg:h-[300px] rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-black/30 flex-shrink-0';
     
     const posterUrl = movie.poster_path 
         ? `${window.movieUtils.IMAGE_BASE_URL}/w500${movie.poster_path}` 
@@ -225,16 +269,16 @@ function createMovieCard(movie) {
         <div class="absolute inset-0">
             <img src="${posterUrl}" alt="${movie.title}" 
                  class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <div class="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 class="text-lg font-bold mb-1 line-clamp-1">${movie.title}</h3>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 lg:group-hover:opacity-100 transition-all duration-300">
+                <div class="absolute bottom-0 left-0 right-0 p-3 lg:p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 class="text-base lg:text-lg font-bold mb-1 line-clamp-1">${movie.title}</h3>
                     <div class="flex items-center mb-2">
-                        <span class="text-yellow-400 text-sm">
+                        <span class="text-yellow-400 text-xs lg:text-sm">
                             <i class="fas fa-star"></i>
                         </span>
-                        <span class="ml-1 text-sm">${movie.vote_average.toFixed(1)}</span>
+                        <span class="ml-1 text-xs lg:text-sm">${movie.vote_average.toFixed(1)}</span>
                     </div>
-                    <button class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-300 text-sm font-medium">
+                    <button class="w-full bg-red-600 hover:bg-red-700 text-white px-3 lg:px-4 py-1.5 lg:py-2 rounded-lg transition-colors duration-300 text-xs lg:text-sm font-medium">
                         Watch Now
                     </button>
                 </div>
@@ -269,41 +313,3 @@ function createMovieCard(movie) {
     return card;
 }
 
-// Show error message
-function showError(message) {
-    if (errorMessage) {
-        errorMessage.textContent = message;
-        errorMessage.classList.add('show');
-        setTimeout(() => {
-            errorMessage.classList.remove('show');
-        }, 5000);
-    } else {
-        console.error(message);
-    }
-}
-
-// Handle fetch errors
-async function handleFetch(endpoint) {
-    try {
-        const response = await fetch(`${BASE_URL}${endpoint}?api_key=${API_KEY}&language=en-US`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error(`Error fetching from ${endpoint}:`, error);
-        throw error;
-    }
-}
-
-// Update fetchMovies to use handleFetch
-async function fetchMovies(endpoint) {
-    try {
-        const data = await handleFetch(endpoint);
-        return data.results || [];
-    } catch (error) {
-        showError(`Failed to load movies from ${endpoint}. Please try again later.`);
-        return [];
-    }
-}

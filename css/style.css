@@ -1,77 +1,9 @@
-/* Essential styles that complement Tailwind */
-
-/* Sidebar animation */
+/* Only essential styles that can't be handled by Tailwind */
 #sidebar.active {
     transform: translateX(0);
 }
 
-/* Error message animation */
 #error-message.show {
     transform: translateY(0);
     opacity: 1;
-}
-
-/* Hide scrollbar but keep functionality */
-.scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
-}
-
-/* Custom scrollbar for non-touch devices */
-@media (hover: hover) {
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #1a1a1a;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #4a4a4a;
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #666;
-    }
-}
-
-/* Loading animation */
-.loading {
-    position: relative;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
-}
-
-/* Touch optimizations */
-@media (max-width: 640px) {
-    #movie-cast {
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    #movie-cast > * {
-        scroll-snap-align: start;
-    }
 }
