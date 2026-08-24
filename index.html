@@ -1,135 +1,923 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Explorer</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="bg-gray-900 text-white">
-    <!-- Header with Navigation -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800/50">
-        <div class="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
-            <a href="/" class="text-xl sm:text-2xl font-bold hover:text-red-500 transition-colors">MovieFlix</a>
-            
-            <!-- Desktop Navigation -->
-            <nav class="hidden lg:block">
-                <ul class="flex items-center space-x-8">
-                    <li><a href="/" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Home</a></li>
-                    <li><a href="#recently-added" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Recently Added</a></li>
-                    <li><a href="#trending" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Trending</a></li>
-                    <li><a href="#popular" class="font-medium hover:text-red-500 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-red-500 after:transition-all after:duration-300">Popular</a></li>
-                </ul>
-            </nav>
-            
-            <!-- Mobile Menu Button -->
-            <button id="hamburger" class="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300 lg:hidden" aria-label="Toggle Navigation">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-        </div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>28 Years Later (2025) - Levistream</title><link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
 
-    <!-- Mobile Sidebar -->
-    <aside id="sidebar" class="fixed top-0 right-0 w-72 h-full bg-gray-900/95 backdrop-blur-sm transform translate-x-full transition-all duration-300 ease-in-out z-50 lg:hidden shadow-xl">
-        <div class="flex flex-col h-full">
-            <div class="flex items-center justify-between p-4 border-b border-gray-800">
-                <h2 class="text-xl font-bold">Menu</h2>
-                <button id="close-sidebar" class="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300">
-                    <i class="fas fa-times text-xl"></i>
+    <!-- Enhanced Modal Scrollbar Styles -->
+    <style>
+      /* Force IMDB yellow colors - ensure they always work */
+      .bg-imdb-yellow {
+        background-color: #f5c518 !important;
+      }
+
+      .text-imdb-yellow {
+        color: #f5c518 !important;
+      }
+
+      .border-t-imdb-yellow {
+        border-top-color: #f5c518 !important;
+      }
+
+      .hover\:bg-imdb-yellow\/90:hover {
+        background-color: rgba(245, 197, 24, 0.9) !important;
+      }
+
+      /* Modal scrollbar styling for better UX */
+      .modal-scrollable {
+        scrollbar-width: thin;
+        scrollbar-color: #f5c518 #374151;
+        scroll-behavior: smooth;
+      }
+
+      .modal-scrollable::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      .modal-scrollable::-webkit-scrollbar-track {
+        background: #374151;
+        border-radius: 6px;
+        margin: 4px;
+      }
+
+      .modal-scrollable::-webkit-scrollbar-thumb {
+        background: #f5c518;
+        border-radius: 6px;
+        border: 2px solid #374151;
+        transition: background-color 0.2s ease;
+      }
+
+      .modal-scrollable::-webkit-scrollbar-thumb:hover {
+        background: #e6b800;
+      }
+
+      .modal-scrollable::-webkit-scrollbar-thumb:active {
+        background: #d4a500;
+      }
+
+      .modal-scrollable::-webkit-scrollbar-corner {
+        background: #374151;
+      }
+
+      /* Fade-in animation for lazy loaded images */
+      .fade-in {
+        animation: fadeInImage 0.5s ease-in-out;
+      }
+
+      @keyframes fadeInImage {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body class="text-white font-['Poppins'] bg-black">
+    <!-- Full Page Backdrop -->
+    <div
+      id="content-backdrop"
+      class="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-20 transition-opacity duration-700 z-0"
+    ></div>
+
+    <!-- Full Page Gradient Overlay -->
+    <div
+      class="fixed inset-0 bg-gradient-to-t from-black/60 via-black/40 to-black/20 z-0"
+    ></div>
+
+    <!-- Hero Section with Content -->
+    <div
+      class="relative min-h-screen w-full opacity-0 transition-all duration-500 ease-out animate-fade-in z-10"
+      id="content-section"
+    >
+      <!-- Content -->
+      <div class="relative container mx-auto px-4 pt-6">
+        <!-- Back Button -->
+        <a
+          href="../index.html"
+          class="group inline-flex items-center text-gray-400 hover:text-white mb-8 transition-all duration-300 hover:scale-105"
+        >
+          <svg
+            class="w-5 h-5 mr-2 transform transition-transform duration-300 group-hover:-translate-x-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          <span class="text-sm font-medium">Back to Home</span>
+        </a>
+
+        <!-- Movie Info -->
+        <div class="flex flex-col lg:flex-row gap-10 py-8">
+          <!-- Poster -->
+          <div class="w-full lg:w-1/4 flex-shrink-0">
+            <div
+              class="relative aspect-[2/3] rounded-xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.02] group"
+            >
+              <img
+                id="content-poster"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                alt="Movie Poster"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div class="flex-grow">
+            <div
+              class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4"
+            >
+              <h1
+                id="content-title"
+                class="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
+              ></h1>
+
+              <!-- Sequel Dropdown Container -->
+              <div
+                id="sequel-dropdown-container"
+                class="mt-4 lg:mt-2 lg:ml-6"
+              ></div>
+            </div>
+
+            <!-- Meta Info and Rating -->
+            <div class="space-y-8 mb-10">
+              <!-- Year, Runtime and Rating -->
+              <div
+                class="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 text-sm font-medium mb-8"
+              >
+                <div
+                  class="flex items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 lg:px-5 lg:py-3 shadow-lg hover:bg-white/15 transition-all duration-300"
+                >
+                  <svg
+                    class="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-gray-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span
+                    id="content-year"
+                    class="text-white font-medium text-xs sm:text-sm lg:text-base"
+                  ></span>
+                </div>
+                <div
+                  class="flex items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 lg:px-5 lg:py-3 shadow-lg hover:bg-white/15 transition-all duration-300"
+                >
+                  <svg
+                    class="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-gray-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span
+                    id="content-runtime"
+                    class="text-white font-medium text-xs sm:text-sm lg:text-base"
+                  ></span>
+                </div>
+                <div
+                  class="flex items-center whitespace-nowrap bg-white/10 backdrop-blur-md border border-white/20 rounded-full overflow-hidden shadow-lg hover:bg-white/15 transition-all duration-300"
+                >
+                  <div
+                    class="bg-imdb-yellow text-black font-bold px-3 py-2 sm:px-4 sm:py-2.5 lg:px-5 lg:py-3 text-xs sm:text-sm lg:text-base"
+                  >
+                    IMDb
+                  </div>
+                  <div
+                    class="flex items-center px-3 py-2 sm:px-4 sm:py-2.5 lg:px-5 lg:py-3"
+                  >
+                    <svg
+                      class="w-3 h-3 sm:w-4 sm:h-4 text-imdb-yellow mr-1.5 sm:mr-2"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                    <span
+                      id="content-rating"
+                      class="font-bold text-white text-xs sm:text-sm lg:text-base"
+                    ></span>
+                    <span class="text-gray-300 text-xs sm:text-sm ml-1"
+                      >/10</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Genres -->
+              <div class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 flex items-center group">
+                  <svg
+                    class="w-5 h-5 mr-3 text-imdb-yellow transform transition-transform duration-300 group-hover:rotate-12"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"
+                    />
+                  </svg>
+                  <span class="text-gray-200">Genres</span>
+                </h2>
+                <div
+                  id="content-genres"
+                  class="flex flex-wrap gap-2 sm:gap-3"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Overview Section with Tab Bar -->
+            <div class="mb-12">
+              <h2 class="text-xl font-semibold mb-5 flex items-center group">
+                <svg
+                  class="w-5 h-5 mr-3 text-imdb-yellow transform transition-transform duration-300 group-hover:rotate-12"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="text-gray-200">Movie Details</span>
+              </h2>
+
+              <!-- Tab Navigation for Overview -->
+              <div
+                class="flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-1 mb-6 max-w-md"
+              >
+                <button
+                  id="overview-tab"
+                  class="flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-imdb-yellow text-black"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Overview
                 </button>
-            </div>
-            <nav class="flex-1 p-4">
-                <ul class="space-y-2">
-                    <li><a href="/" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Home</a></li>
-                    <li><a href="#recently-added" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Recently Added</a></li>
-                    <li><a href="#trending" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Trending</a></li>
-                    <li><a href="#popular" class="block px-4 py-2.5 rounded-lg hover:bg-gray-800 hover:text-red-500 transition-all duration-300">Popular</a></li>
-                </ul>
-            </nav>
-        </div>
-    </aside>
+                <button
+                  id="information-tab"
+                  class="flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Information
+                </button>
+              </div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 pt-16 lg:pt-20">
-        <!-- Featured Content -->
-        <section class="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] rounded-lg lg:rounded-xl overflow-hidden mb-8 lg:mb-16">
-            <div id="hero-movie" class="absolute inset-0 bg-cover bg-center bg-no-repeat"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 lg:p-8">
-                <div class="container mx-auto max-w-screen-xl">
-                    <div class="max-w-2xl">
-                        <span class="inline-block px-2 py-1 sm:px-3 sm:py-1.5 bg-red-600 text-xs sm:text-sm font-medium rounded-md mb-2 sm:mb-3 lg:mb-4 shadow-lg">Featured</span>
-                        <h2 id="hero-title" class="text-2xl sm:text-3xl lg:text-5xl font-bold mb-2 sm:mb-3 lg:mb-4 drop-shadow-lg line-clamp-2"></h2>
-                        <p id="hero-overview" class="text-sm sm:text-base lg:text-lg max-w-xl lg:max-w-2xl mb-4 sm:mb-6 lg:mb-8 leading-relaxed text-gray-200 line-clamp-2 sm:line-clamp-3"></p>
-                        <button class="bg-red-600 hover:bg-red-700 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-600/20 flex items-center space-x-2 text-sm sm:text-base">
-                            <div class="w-6 h-6 sm:w-7 sm:h-7 bg-white rounded-full flex items-center justify-center">
-                                <i class="fas fa-play text-red-600 text-xs sm:text-sm ml-0.5"></i>
-                            </div>
-                            <span>Watch Trailer</span>
+              <!-- Tab Content Container -->
+              <div class="relative w-full">
+                <!-- Overview Content -->
+                <div
+                  id="overview-content"
+                  class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6"
+                >
+                  <p
+                    id="content-overview"
+                    class="text-gray-300 leading-relaxed text-lg max-w-3xl font-['Poppins'] font-light"
+                  ></p>
+                </div>
+
+                <!-- Information Content -->
+                <div
+                  id="information-content"
+                  class="hidden bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6"
+                >
+                  <!-- Loading State -->
+                  <div
+                    id="information-loading"
+                    class="flex items-center justify-center py-8"
+                  >
+                    <div
+                      class="w-6 h-6 border-2 border-gray-600 border-t-imdb-yellow rounded-full animate-spin"
+                    ></div>
+                  </div>
+
+                  <!-- Information Grid -->
+                  <div
+                    id="information-details"
+                    class="hidden grid grid-cols-1 md:grid-cols-2 gap-6"
+                  >
+                    <!-- Director -->
+                    <div class="space-y-2">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Director
+                      </h4>
+                      <p id="movie-director" class="text-gray-300 font-medium">
+                        -
+                      </p>
+                    </div>
+
+                    <!-- Writer -->
+                    <div class="space-y-2">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Writer
+                      </h4>
+                      <p id="movie-writer" class="text-gray-300 font-medium">
+                        -
+                      </p>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="space-y-2">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Rating
+                      </h4>
+                      <p id="movie-rating" class="text-gray-300 font-medium">
+                        -
+                      </p>
+                    </div>
+
+                    <!-- Budget -->
+                    <div class="space-y-2">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Budget
+                      </h4>
+                      <p id="movie-budget" class="text-gray-300 font-medium">
+                        -
+                      </p>
+                    </div>
+
+                    <!-- Box Office -->
+                    <div class="space-y-2">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Box Office
+                      </h4>
+                      <p id="movie-revenue" class="text-gray-300 font-medium">
+                        -
+                      </p>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="space-y-2">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Status
+                      </h4>
+                      <p id="movie-status" class="text-gray-300 font-medium">
+                        -
+                      </p>
+                    </div>
+
+                    <!-- Cast (Full Width) -->
+                    <div class="md:col-span-2 space-y-3">
+                      <h4
+                        class="text-sm font-semibold text-imdb-yellow uppercase tracking-wide"
+                      >
+                        Main Cast
+                      </h4>
+                      <div id="movie-cast" class="flex flex-wrap gap-2">
+                        <!-- Cast will be populated here -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Error State -->
+                  <div id="information-error" class="hidden text-center py-8">
+                    <div
+                      class="bg-red-600/20 border border-red-500/50 rounded-xl p-6 max-w-md mx-auto"
+                    >
+                      <svg
+                        class="w-8 h-8 text-red-400 mx-auto mb-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <h4 class="text-lg font-semibold text-white mb-2">
+                        Unable to Load Information
+                      </h4>
+                      <p class="text-red-300 text-sm">
+                        Movie details are currently unavailable
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Bar Section -->
+            <div class="mb-12">
+              <h2 class="text-xl font-semibold mb-5 flex items-center group">
+                <svg
+                  class="w-5 h-5 mr-3 text-imdb-yellow transform transition-transform duration-300 group-hover:scale-110"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span class="text-gray-200">Content</span>
+              </h2>
+
+              <!-- Tab Navigation -->
+              <div
+                class="flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-1 mb-6 max-w-md"
+              >
+                <button
+                  id="watch-tab"
+                  class="flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-imdb-yellow text-black"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Video
+                </button>
+                <button
+                  id="share-tab"
+                  class="flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10"
+                >
+                  <svg
+                    class="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                    />
+                  </svg>
+                  Share to Rave
+                </button>
+              </div>
+
+              <!-- Tab Content -->
+              <div
+                class="relative w-full rounded-xl overflow-hidden shadow-2xl"
+              >
+                <!-- Watch Now Content -->
+                <div
+                  id="watch-content"
+                  class="bg-black/50 rounded-xl overflow-hidden"
+                >
+                  <div class="relative aspect-video">
+                    <iframe
+                      src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FBigBuckBunny.mp4&key=0915ca2971fcab757b591eb0c381a02a"
+                      class="w-full h-full border-0 rounded-xl"
+                      allowfullscreen
+                      loading="lazy"
+                      title="Big Buck Bunny - Demo Video"
+                      sandbox="allow-scripts allow-same-origin allow-presentation"
+                    ></iframe>
+                    <!-- Fallback for when iframe fails to load -->
+                    <div
+                      id="video-fallback"
+                      class="absolute inset-0 w-full h-full flex items-center justify-center bg-black/50 hidden"
+                    >
+                      <div class="text-center p-4">
+                        <svg
+                          class="w-12 h-12 text-gray-400 mx-auto mb-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <p class="text-gray-400">
+                          Video content will be available soon
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Share Content -->
+                <div
+                  id="share-content"
+                  class="hidden bg-white/10 backdrop-blur-sm border border-white/20 p-8"
+                >
+                  <div class="text-center max-w-md mx-auto">
+                    <div class="mb-6">
+                      <h3 class="text-xl font-semibold text-white mb-2">
+                        Share This Movie
+                      </h3>
+                      <p class="text-gray-300 text-sm mb-6">
+                        Copy this link and paste it in Rave web browser
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-gray-800/50 backdrop-blur-sm border border-gray-600/50 rounded-lg p-3 sm:p-4 mb-4"
+                    >
+                      <div
+                        class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0"
+                      >
+                        <input
+                          id="share-url"
+                          type="text"
+                          readonly
+                          class="bg-transparent text-gray-300 text-xs sm:text-sm flex-1 sm:mr-3 outline-none select-all py-2 sm:py-0 px-2 sm:px-0 rounded sm:rounded-none border sm:border-none border-gray-600/30 sm:bg-transparent"
+                          value=""
+                        />
+                        <button
+                          id="copy-link-btn"
+                          class="bg-imdb-yellow text-black px-3 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm hover:bg-imdb-yellow/90 transition-colors flex items-center justify-center flex-shrink-0"
+                        >
+                          <svg
+                            class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                            />
+                          </svg>
+                          <span class="whitespace-nowrap">Copy Link</span>
                         </button>
+                      </div>
                     </div>
+
+                    <div
+                      id="copy-success"
+                      class="hidden bg-green-600/20 border border-green-500/50 rounded-lg p-3 text-green-400 text-sm mb-4"
+                    >
+                      ✓ Link copied to clipboard!
+                    </div>
+
+                    <!-- Tutorial Footer -->
+                    <div class="text-center">
+                      <button
+                        id="tutorial-btn"
+                        class="text-gray-400 hover:text-white text-sm transition-colors inline-flex items-center"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        How to use this link ?
+                      </button>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        </section>
 
-        <!-- Movie Sections -->
-        <div class="space-y-8 lg:space-y-16">
-            <!-- Trending Movies Section -->
-            <section id="trending">
-                <h3 class="text-xl lg:text-2xl font-bold mb-4 lg:mb-6 px-1">Trending Now</h3>
-                <div class="overflow-x-auto pb-6 -mx-4 px-4 touch-pan-x scrollbar-hide">
-                    <div class="swiper trending-swiper movie-slider flex space-x-3 lg:space-x-4">
-                        <div class="swiper-wrapper">
-                            <!-- Movies will be inserted here by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- Similar Movies Section -->
+            <div class="mb-12">
+              <h2 class="text-xl font-semibold mb-5 flex items-center group">
+                <svg
+                  class="w-5 h-5 mr-3 text-imdb-yellow transform transition-transform duration-300 group-hover:rotate-12"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  />
+                </svg>
+                <span class="text-gray-200">More Like This</span>
+              </h2>
 
-            <!-- Recently Added Section -->
-            <section id="recently-added">
-                <h3 class="text-xl lg:text-2xl font-bold mb-4 lg:mb-6 px-1">Recently Added</h3>
-                <div class="overflow-x-auto pb-6 -mx-4 px-4 touch-pan-x scrollbar-hide">
-                    <div class="swiper recently-added-swiper movie-slider flex space-x-3 lg:space-x-4">
-                        <div class="swiper-wrapper">
-                            <!-- Recently added content will be inserted here by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </section>
+              <!-- Loading State -->
+              <div
+                id="similar-loading"
+                class="flex items-center justify-center py-12"
+              >
+                <div
+                  class="w-6 h-6 border-2 border-gray-600 border-t-imdb-yellow rounded-full animate-spin"
+                ></div>
+              </div>
 
-            <!-- Popular Movies Section -->
-            <section id="popular">
-                <h3 class="text-xl lg:text-2xl font-bold mb-4 lg:mb-6 px-1">Popular Movies</h3>
-                <div class="overflow-x-auto pb-6 -mx-4 px-4 touch-pan-x scrollbar-hide">
-                    <div class="swiper popular-swiper movie-slider flex space-x-3 lg:space-x-4">
-                        <div class="swiper-wrapper">
-                            <!-- Movies will be inserted here by JavaScript -->
-                        </div>
-                    </div>
+              <!-- Similar Movies Grid -->
+              <div
+                id="similar-content"
+                class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6"
+              >
+                <!-- Similar movies will be populated here by JavaScript -->
+              </div>
+
+              <!-- Error State -->
+              <div id="similar-error" class="hidden text-center py-12">
+                <div
+                  class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-8 max-w-md mx-auto"
+                >
+                  <svg
+                    class="w-12 h-12 text-gray-400 mx-auto mb-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <h3 class="text-lg font-semibold text-white mb-2">
+                    Unable to Load Similar Movies
+                  </h3>
+                  <p class="text-gray-400 text-sm">Please try again later</p>
                 </div>
-            </section>
+              </div>
+            </div>
+          </div>
         </div>
-    </main>
-
-    <!-- Error Message -->
-    <div id="error-message" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300">
-        Failed to load movies. Please try again later.
+      </div>
     </div>
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <!-- Config -->
-    <script src="config.js"></script>
-    <!-- Custom JS -->
-    <script src="assets/app.js" type="module"></script>
-</body>
+    <!-- Tutorial Modal -->
+    <div
+      id="tutorial-modal"
+      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl max-w-2xl w-full max-h-[90vh] shadow-2xl flex flex-col"
+      >
+        <!-- Fixed Header -->
+        <div class="flex-shrink-0 p-6 sm:p-8 border-b border-white/10">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-white">How to Use This Link</h2>
+            <button
+              id="close-modal"
+              class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 hover:bg-white/20 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 text-gray-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto min-h-0 modal-scrollable">
+          <div class="p-6 sm:p-8">
+            <!-- Modal Content -->
+            <div class="space-y-6">
+              <!-- Step 1 -->
+              <div
+                class="bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg p-4 sm:p-6"
+              >
+                <div class="flex items-center mb-3">
+                  <div
+                    class="bg-imdb-yellow text-black rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-3"
+                  >
+                    1
+                  </div>
+                  <h3 class="text-lg font-semibold text-white">
+                    Open Rave App
+                  </h3>
+                </div>
+                <div
+                  class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-600/30"
+                >
+                  <img
+                    src="https://snipboard.io/U0B5Sq.jpg"
+                    alt="Step 1 - Open Rave App"
+                    class="w-full h-auto object-contain"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                  <div
+                    class="hidden w-full h-32 bg-gray-700/50 flex items-center justify-center text-gray-400 text-sm"
+                  >
+                    <span>Image not available</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div
+                class="bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg p-4 sm:p-6"
+              >
+                <div class="flex items-center mb-3">
+                  <div
+                    class="bg-imdb-yellow text-black rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-3"
+                  >
+                    2
+                  </div>
+                  <h3 class="text-lg font-semibold text-white">
+                    Paste the Link
+                  </h3>
+                </div>
+                <div
+                  class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-600/30"
+                >
+                  <img
+                    src="https://snipboard.io/4npXSC.jpg"
+                    alt="Step 2 - Paste the Link"
+                    class="w-full h-auto object-contain"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                  <div
+                    class="hidden w-full h-32 bg-gray-700/50 flex items-center justify-center text-gray-400 text-sm"
+                  >
+                    <span>Image not available</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div
+                class="bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg p-4 sm:p-6"
+              >
+                <div class="flex items-center mb-3">
+                  <div
+                    class="bg-imdb-yellow text-black rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-3"
+                  >
+                    3
+                  </div>
+                  <h3 class="text-lg font-semibold text-white">
+                    Start Watching
+                  </h3>
+                </div>
+                <div
+                  class="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-600/30"
+                >
+                  <img
+                    src="https://snipboard.io/SOYoNj.jpg"
+                    alt="Step 3 - Start Watching"
+                    class="w-full h-auto object-contain"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                  <div
+                    class="hidden w-full h-32 bg-gray-700/50 flex items-center justify-center text-gray-400 text-sm"
+                  >
+                    <span>Image not available</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fixed Footer -->
+        <div class="flex-shrink-0 p-6 sm:p-8 border-t border-white/10">
+          <button
+            id="close-modal-btn"
+            class="bg-imdb-yellow text-black px-6 py-2 rounded-lg font-semibold hover:bg-imdb-yellow/90 transition-colors w-full sm:w-auto"
+          >
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "suportplataform": [
+    "https://schema.org/IOSPlatform",
+    "https://schema.org/AndroidPlatform"
+  ],
+  "name": "28 Years Later (2025)",
+  "uploadDate": "2025-07-29T13:59:34+00:00",
+  "duration": "PT1H55M6S",
+  "thumbnailUrl": [
+    "https://image.tmdb.org/t/p/original/cEJQdC7T31YaejL7BMnu9V5GYWz.jpg"
+  ],
+  "contentUrl": "https://hug.ingfaced.Year.Blood.War.S01E45.1080resolve/BLEACH.Thousand.Year.Blood.War.S01E45.1080p.NF.WEB-DL.AAC2.0.H.264-VARYG.mkv"
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <script type="module" src="../src/content.js"></script>
+  </body>
 </html>
